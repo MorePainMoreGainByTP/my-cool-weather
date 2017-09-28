@@ -1,5 +1,6 @@
 package com.tangpeng.mycoolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.tangpeng.mycoolweather.gson.Forecast;
 import com.tangpeng.mycoolweather.gson.Weather;
+import com.tangpeng.mycoolweather.service.AutoUpdateService;
 import com.tangpeng.mycoolweather.util.HttpUtil;
 import com.tangpeng.mycoolweather.util.LogUtil;
 import com.tangpeng.mycoolweather.util.Utility;
@@ -206,6 +208,13 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        if (weather != null && "ok".equals(weather.status)) {
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        } else {
+            Toast.makeText(this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initViews() {
